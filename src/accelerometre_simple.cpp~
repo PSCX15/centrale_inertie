@@ -1,0 +1,148 @@
+
+#include <string>
+#include <vector>
+#include "ros/ros.h"
+#include "std_msgs/String.h"
+#include <ros/duration.h>
+#include <sstream>
+
+#include "centrale_inertie/CI_msg.h"
+
+using std::vector;
+
+
+
+vector<float> vecAccX;
+vector<float> vecAccY;
+vector<float> vecAccZ;
+
+vector<float> vecVitX;
+vector<float> vecVitY;
+vector<float> vecVitZ;
+
+vector<float> vecPosX;
+vector<float> vecPosY;
+vector<float> vecPosZ;
+
+int count = 0;
+
+vector<ros::Rate> rate;
+float duree;
+
+float coef = 9.81/256.0;
+
+ros::Time begin;
+ros::Time end;
+
+vector<float> vecVit; 
+
+
+float integrer(float num, float numMoinsUn, float temps);
+void calculerVitesse();
+void calculerPosition();
+
+
+
+
+void AccCallback(const centrale_inertie::CI_msg::ConstPtr& msg)
+{
+	end = ros::Time::now();
+	
+	duree = (end - begin).toSec() ; 
+	
+	begin = ros::Time::now();
+	
+	if(abs(msg->x)<15){
+		vecAccX.push_back(0.0);	
+	}
+	else{
+		vecAccX.push_back(msg->x*coef);
+	}
+	if(abs(msg->y)<15){
+		vecAccY.push_back(0.0);	
+	}
+	else{
+		vecAccY.push_back(msg->y*coef);
+	}
+	if(abs(msg->z)<15){
+		vecAccZ.push_back(0.0);	
+	}
+	else{
+		vecAccZ.push_back(msg->z*coef);
+	}
+
+	
+	
+	ROS_INFO("%f",duree);
+	//ROS_INFO("Moyenne acc : x=%f ; y=%f ; z=%f",vecAcc[0],vecAcc[1],vecAcc[2]);
+	
+	calculerVitesse();
+	calculerPosition();
+	
+	
+	//ROS_INFO("vitesse : x=%f ; y=%f ; z=%f",vecVitX[count],vecVitY[count],vecVitZ[count]);
+	
+	count++;
+	
+}
+
+
+void calculerVitesse(){
+	if(count == 0){
+		vecVitX.push_back(0.0);
+		vecVitY.push_back(0.0);
+		vecVitZ.push_back(0.0);
+	}
+	else{
+		vecVitX.push_back(vecVitX[count-1]+integrer(vecAccX[count],vecAccX[count-1],duree));
+		vecVitY.push_back(vecVitY[count-1]+integrer(vecAccY[count],vecAccY[count-1],duree));
+		vecVitZ.push_back(vecVitZ[count-1]+integrer(vecAccZ[count],vecAccZ[count-1],duree));
+	}
+}
+
+
+void calculerPosition(){
+	if(count == 0){
+		vecPosX.push_back(0.0);
+		vecPosY.push_back(0.0);
+		vecPosZ.push_back(0.0);
+	}
+	else{
+		vecPosX.push_back(vecPosX[count-1]+integrer(vecVitX[count],vecVitX[count-1],duree));
+		vecPosY.push_back(vecPosY[count-1]+integrer(vecVitY[count],vecVitY[count-1],duree));
+		vecPosZ.push_back(vecPosZ[count-1]+integrer(vecVitZ[count],vecVitZ[count-1],duree));
+	}
+}
+
+
+float integrer(float num, float numMoinsUn, float temps){
+	return((num+numMoinsUn)*temps/2);
+}
+
+
+int main(int argc, char **argv)
+{
+
+  ros::init(argc, argv, "Etallonage");
+  
+  ros::NodeHandle n;
+  
+  ros::Rate loop_rate(10);
+  rate.push_back(loop_rate);
+  
+	ros::Subscriber sub_acc = n.subscribe("CIAcc", 1000, AccCallback);
+	
+	ros::Duration duree;
+	
+	while(ros::ok()){
+		
+		
+		
+		ros::spinOnce();
+	}
+
+  return 0;
+
+}
+
+
