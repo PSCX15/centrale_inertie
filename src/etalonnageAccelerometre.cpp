@@ -28,9 +28,9 @@ ros::Time begin;
 ros::Time end;
 
 
-int xMoy;
-int yMoy;
-int zMoy;
+float xMoy;
+float yMoy;
+float zMoy;
 
 volatile bool stop;
 
@@ -163,14 +163,14 @@ int main(int argc, char **argv)
 	//vecZ = new vector<float>();
 	stop = false;
 	
-  ros::init(argc, argv, "EtallonageGyr");
+  ros::init(argc, argv, "EtallonageAcc");
   
   ros::NodeHandle n;
   
   ros::Rate loop_rate(10);
   rate.push_back(loop_rate);
   
-	ros::Subscriber sub_gyr = n.subscribe("/CI/Gyr/corrected", 1000, Callback);
+	ros::Subscriber sub_gyr = n.subscribe("/CI/Acc", 1000, Callback);
 	
 	ros::Publisher pub_mag = n.advertise<std_msgs::Bool>("/Correction/Changed",1000);
 	
@@ -193,22 +193,22 @@ int main(int argc, char **argv)
 			ROS_INFO("Moyenne faite sur %i valeurs en excluant %i valeurs absurdes",countFinal,deduis);
 		
 			float XCorrection;
-			if(!n.getParam("/Correction/Gyr/x",XCorrection)){
+			if(!n.getParam("/Correction/Acc/x",XCorrection)){
 				XCorrection = 0;
 			}
-			n.setParam("/Correction/Gyr/x",XCorrection+xMoy);
+			n.setParam("/Correction/Acc/x",XCorrection+xMoy);
 			
 			float YCorrection;
-			if(!n.getParam("/Correction/Gyr/y",YCorrection)){
+			if(!n.getParam("/Correction/Acc/y",YCorrection)){
 				YCorrection = 0;
 			}
-			n.setParam("/Correction/Gyr/y",YCorrection+yMoy);
+			n.setParam("/Correction/Acc/y",YCorrection+yMoy);
 			
 			float ZCorrection;
-			if(!n.getParam("/Correction/Gyr/z",ZCorrection)){
+			if(!n.getParam("/Correction/Acc/z",ZCorrection)){
 				ZCorrection = 0;
 			}
-			n.setParam("/Correction/Gyr/z",ZCorrection+zMoy);
+			n.setParam("/Correction/Acc/z",ZCorrection+zMoy);
 			
 			std_msgs::Bool msg;
 			msg.data = true;

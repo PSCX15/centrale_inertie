@@ -28,9 +28,9 @@ ros::Time begin;
 ros::Time end;
 
 
-int xMoy;
-int yMoy;
-int zMoy;
+float xMoy;
+float yMoy;
+float zMoy;
 
 volatile bool stop;
 

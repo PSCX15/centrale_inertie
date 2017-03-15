@@ -139,14 +139,14 @@ target_link_libraries(accelerometre_node ${catkin_LIBRARIES} )
 
 
 
- add_executable(etalonnageAccelerometre src/etalonnageMagnetometre.cpp)
+ add_executable(etalonnageMagnetrometre src/etalonnageMagnetometre.cpp)
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
- add_dependencies(etalonnageAccelerometre ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+ add_dependencies(etalonnageMagnetrometre ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
-target_link_libraries(etalonnageAccelerometre ${catkin_LIBRARIES} )
+target_link_libraries(etalonnageMagnetrometre ${catkin_LIBRARIES} )
 
 
 
@@ -154,7 +154,9 @@ add_executable(etalonnageGyrometre src/etalonnageGyrometre.cpp)
 add_dependencies(etalonnageGyrometre ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(etalonnageGyrometre ${catkin_LIBRARIES} )
 
-
+add_executable(etalonnageAccelerometre src/etalonnageAccelerometre.cpp)
+add_dependencies(etalonnageAccelerometre ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(etalonnageAccelerometre ${catkin_LIBRARIES} )
 #############
 ## Install ##
 #############
