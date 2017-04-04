@@ -112,8 +112,8 @@ catkin_package(
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
- include_directories(include)
-include_directories(include
+
+include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
@@ -154,7 +154,9 @@ add_executable(etalonnageGyrometre src/etalonnageGyrometre.cpp)
 add_dependencies(etalonnageGyrometre ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(etalonnageGyrometre ${catkin_LIBRARIES} )
 
-
+add_executable(etalonnageAccelerometre src/etalonnageAccelerometre.cpp)
+add_dependencies(etalonnageAccelerometre ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(etalonnageAccelerometre ${catkin_LIBRARIES} )
 #############
 ## Install ##
 #############
