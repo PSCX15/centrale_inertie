@@ -32,6 +32,10 @@ float xMoy;
 float yMoy;
 float zMoy;
 
+float xV;
+float yV;
+float zV;
+
 volatile bool stop;
 
 void Callback(const centrale_inertie::CI_msg::ConstPtr& msg)
@@ -73,7 +77,9 @@ int faireMoyenne(int countFinal){
 	float totalX = 0;
  	float totalY = 0;
  	float totalZ = 0;
- 	
+	float ecartX = 0;
+	float ecartY = 0;
+	float ecartZ = 0;
  	int supprimer = 0;
  	
 	bool fini = false;
@@ -96,9 +102,9 @@ int faireMoyenne(int countFinal){
 	 		totalY = totalY/longueur;
 	 		totalZ = totalZ/longueur;
 	 		
-	 		float ecartX = 0;
-	 		float ecartY = 0;
-	 		float ecartZ = 0;
+	 		ecartX = 0;
+	 		ecartY = 0;
+	 		ecartZ = 0;
 	 		
 	 		for(unsigned int i=0; i<vecX.size(); i++)
 			{
@@ -146,6 +152,10 @@ int faireMoyenne(int countFinal){
 		
 		} 		
 	}
+	
+	xV = ecartX*ecartX;
+	yV = ecartY*ecartY;
+	zV = ecartZ*ecartZ;
 	
 	xMoy = totalX;
 	yMoy = totalY;
@@ -209,6 +219,11 @@ int main(int argc, char **argv)
 				ZCorrection = 0;
 			}
 			n.setParam("/Correction/Acc/z",ZCorrection+zMoy);
+			
+			n.setParam("/Correction/Acc/xV",xV);
+			n.setParam("/Correction/Acc/yV",yV);
+			n.setParam("/Correction/Acc/zV",zV);
+			
 			
 			std_msgs::Bool msg;
 			msg.data = true;

@@ -28,9 +28,13 @@ ros::Time begin;
 ros::Time end;
 
 
-int xMoy;
-int yMoy;
-int zMoy;
+float xMoy;
+float yMoy;
+float zMoy;
+
+float xV;
+float yV;
+float zV;
 
 volatile bool stop;
 
@@ -147,6 +151,10 @@ int faireMoyenne(int countFinal){
 		} 		
 	}
 	
+	xV = ecartX*ecartX;
+	yV = ecartY*ecartY;
+	zV = ecartZ*ecartZ;
+	
 	xMoy = totalX;
 	yMoy = totalY;
 	zMoy = totalZ;
@@ -209,6 +217,10 @@ int main(int argc, char **argv)
 				ZCorrection = 0;
 			}
 			n.setParam("/Correction/Gyr/z",ZCorrection+zMoy);
+			
+			n.setParam("/Correction/Gyr/xV",xV);
+			n.setParam("/Correction/Gyr/yV",yV);
+			n.setParam("/Correction/Gyr/zV",zV);
 			
 			std_msgs::Bool msg;
 			msg.data = true;

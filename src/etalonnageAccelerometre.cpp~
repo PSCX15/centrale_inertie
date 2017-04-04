@@ -32,6 +32,10 @@ float xMoy;
 float yMoy;
 float zMoy;
 
+float xV;
+float yV;
+float zV;
+
 volatile bool stop;
 
 void Callback(const centrale_inertie::CI_msg::ConstPtr& msg)
@@ -147,6 +151,10 @@ int faireMoyenne(int countFinal){
 		} 		
 	}
 	
+	xV = ecartX*ecartX;
+	yV = ecartY*ecartY;
+	zV = ecartZ*ecartZ;
+	
 	xMoy = totalX;
 	yMoy = totalY;
 	zMoy = totalZ;
@@ -163,7 +171,7 @@ int main(int argc, char **argv)
 	//vecZ = new vector<float>();
 	stop = false;
 	
-  ros::init(argc, argv, "EtallonageGyr");
+  ros::init(argc, argv, "EtallonageAcc");
   
   ros::NodeHandle n;
   
@@ -209,6 +217,11 @@ int main(int argc, char **argv)
 				ZCorrection = 0;
 			}
 			n.setParam("/Correction/Acc/z",ZCorrection+zMoy);
+			
+			n.setParam("/Correction/Acc/xV",xV);
+			n.setParam("/Correction/Acc/yV",yV);
+			n.setParam("/Correction/Acc/zV",zV);
+			
 			
 			std_msgs::Bool msg;
 			msg.data = true;
