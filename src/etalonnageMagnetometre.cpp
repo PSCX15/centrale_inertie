@@ -74,7 +74,7 @@ void MagCallback(const centrale_inertie::CI_msg::ConstPtr& msg)
 	}
 	
 	
-	ROS_INFO("%f",duree);
+
 	//ROS_INFO("Moyenne acc : x=%f ; y=%f ; z=%f",vecAcc[0],vecAcc[1],vecAcc[2]);
 	
 	//ROS_INFO("vitesse : x=%f ; y=%f ; z=%f",vecVitX[count],vecVitY[count],vecVitZ[count]);
@@ -99,7 +99,7 @@ int main(int argc, char **argv)
 	
 	ros::Publisher pub_mag = n.advertise<std_msgs::Bool>("/Correction/Changed",1000);
 	
-	ROS_INFO("Faire bouger le magnetometre dans tous les sens svp. Vous avez 20 secondes");
+	ROS_INFO("Faire bouger le magnetometre dans tous les sens svp. Vous avez 30 secondes");
 	ros::Duration duree;
 	
 	ros::Time debut = ros::Time::now();
@@ -108,7 +108,7 @@ int main(int argc, char **argv)
 		ros::spinOnce();
 		
 		
-		if(ros::Time::now()>debut+ros::Duration(20.0)){
+		if(ros::Time::now()>debut+ros::Duration(30.0)){
 			float magXCorrection;
 			if(!n.getParam("/Correction/Mag/x",magXCorrection)){
 				magXCorrection = 0;
@@ -131,6 +131,7 @@ int main(int argc, char **argv)
 			msg.data = true;
 			pub_mag.publish(msg);
 			
+			ROS_INFO("c'est bon");
 			ros::Duration(2.0).sleep();
 			
 			ros::shutdown();
